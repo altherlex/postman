@@ -1,0 +1,83 @@
+extends layout
+
+block content
+  form
+    div.form-group
+      select(class="form-control", id="conector")
+        each config in configs.connectores
+          option=config.value
+
+    div.form-group
+      label Entrada
+      textarea(id="entrada", rows="6", cols="50", class="form-control")=configs.connectores[0].config_stringify
+
+    div.form-group
+      div.row
+        div.col-md-1
+          button.btn.btn-primary.form-control#send Send
+
+  div#div_loading.hidden
+    h2 Loading...
+  div#div_saida
+    div.form-group
+      label Saída
+      textarea(id="saida", rows="8", cols="50", class="form-control")
+    div
+      //- <!-- Nav tabs -->
+      ul(class="nav nav-tabs",role="tablist")
+        li(role="presentation",class="active dropdown")
+          a.dropdown-toggle(data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") Service
+            span(class="caret")
+          ul(class="dropdown-menu", role="tablist")
+            li.active(role="presentation")
+              a(href="#service", aria-controls="service", role="tab", data-toggle="tab") code
+            li(role="presentation")
+              a(href="#service_test", aria-controls="service", role="tab", data-toggle="tab") test
+        li(role="presentation")
+          a(href="#processor", aria-controls="processor", role="tab", data-toggle="tab") Processor
+        li(role="presentation")
+          a(href="#resource", aria-controls="resource", role="tab", data-toggle="tab") Controller/resource
+        li(role="presentation")
+          a(href="#validation", aria-controls="validation", role="tab", data-toggle="tab") Controller/validation
+      //- <!-- Tab panes -->
+      div(class="tab-content")
+        div(role="tabpanel", class="tab-pane active", id="service")
+          pre.
+            service content file here
+        div(role="tabpanel", class="tab-pane", id="service_test")
+          pre.
+            test service content file here
+        div(role="tabpanel", class="tab-pane", id="processor") ...
+        div(role="tabpanel", class="tab-pane", id="resource") ...
+        div(role="tabpanel", class="tab-pane", id="validation") ...
+
+    script(type='text/javascript').
+      $("#conector").change(function(){
+        var elem = $(this);
+        var entrada = $(!{JSON.stringify(configs.connectores)})
+        entrada = entrada.filter(function(index, i){
+          return i.value === elem.val();
+        });
+        if (entrada[0])
+          $('#entrada').val(entrada[0].config_stringify);
+      });
+      $('#send').click(function(){
+        $.ajax({
+          method: "POST",
+          url: "request",
+          dataType: 'json',
+          data: {url: $('#conector').val(), entrada: $('#entrada').val()},
+          beforeSend: function() {
+            $("#div_loading").removeClass('hidden');
+            $("#div_saida").hide();
+            $("#div_loading").show();
+          }          
+        })
+        .success(function(res) {
+          $('#saida').val(res.text);
+        })      
+        .done(function( msg ) {
+            $("#div_saida").show();
+            $("#div_loading").hide();
+        });      
+      });
