@@ -1,83 +1,108 @@
 extends layout
-
 block content
-  form
-    div.form-group
-      select(class="form-control", id="conector")
-        each config in configs.connectores
-          option=config.value
+  include ./integrate.jade
 
-    div.form-group
-      label Entrada
-      textarea(id="entrada", rows="6", cols="50", class="form-control")=configs.connectores[0].config_stringify
+  //- Book Panel
+  div.panel.panel-warning
+    div(class="panel-heading")
+      h3(class="panel-title") 2. Book (atributo, valor)
+        button(type="button" class="close icon-panel")
+          span.glyphicon.glyphicon-plus
 
-    div.form-group
-      div.row
-        div.col-md-1
-          button.btn.btn-primary.form-control#send Send
-
-  div#div_loading.hidden
-    h2 Loading...
-  div#div_saida
-    div.form-group
-      label Saída
-      textarea(id="saida", rows="8", cols="50", class="form-control")
-    div
-      //- <!-- Nav tabs -->
-      ul(class="nav nav-tabs",role="tablist")
-        li(role="presentation",class="active dropdown")
-          a.dropdown-toggle(data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") Service
-            span(class="caret")
-          ul(class="dropdown-menu", role="tablist")
-            li.active(role="presentation")
-              a(href="#service", aria-controls="service", role="tab", data-toggle="tab") code
-            li(role="presentation")
-              a(href="#service_test", aria-controls="service", role="tab", data-toggle="tab") test
-        li(role="presentation")
-          a(href="#processor", aria-controls="processor", role="tab", data-toggle="tab") Processor
-        li(role="presentation")
-          a(href="#resource", aria-controls="resource", role="tab", data-toggle="tab") Controller/resource
-        li(role="presentation")
-          a(href="#validation", aria-controls="validation", role="tab", data-toggle="tab") Controller/validation
-      //- <!-- Tab panes -->
-      div(class="tab-content")
-        div(role="tabpanel", class="tab-pane active", id="service")
-          pre.
-            service content file here
-        div(role="tabpanel", class="tab-pane", id="service_test")
-          pre.
-            test service content file here
-        div(role="tabpanel", class="tab-pane", id="processor") ...
-        div(role="tabpanel", class="tab-pane", id="resource") ...
-        div(role="tabpanel", class="tab-pane", id="validation") ...
-
-    script(type='text/javascript').
-      $("#conector").change(function(){
-        var elem = $(this);
-        var entrada = $(!{JSON.stringify(configs.connectores)})
-        entrada = entrada.filter(function(index, i){
-          return i.value === elem.val();
-        });
-        if (entrada[0])
-          $('#entrada').val(entrada[0].config_stringify);
+    div.panel-body.hidden#book-panel
+      div.form-group
+        //- <!-- Nav tabs -->
+        ul(class="nav nav-tabs",role="tablist")
+          li.active(role="presentation")
+            a(href="#book-entrada", aria-controls="processor", role="tab", data-toggle="tab") Entrada
+          li(role="presentation")
+            a(href="#book-saida", aria-controls="resource", role="tab", data-toggle="tab") Saída
+      div.form-group      
+        //- <!-- Tab panes -->
+        div(class="tab-content")
+          div(role="tabpanel", class="tab-pane active", id="book-entrada")
+            div.form-group
+              div.form-inline
+                div.form-group
+                  label Split info
+                  input(type="text", class="form-control", id="split-info-entrada", placeholder=",")
+                div.form-group
+                  label Split line
+                  input(type="text", class="form-control", id="split-line-entrada", placeholder=";")
+            div.form-group
+              textarea(id="book_entrada", rows="6", class="form-control")
+          div(role="tabpanel", class="tab-pane", id="book-saida")
+            div.form-group
+              div.form-inline
+                div.form-group
+                  label Split info
+                  input(type="text", class="form-control", id="split-info-saida", placeholder=",")
+                div.form-group
+                  label Split line
+                  input(type="text", class="form-control", id="split-line-saida", placeholder=";")
+            div.form-group
+              textarea(id="book_saida", rows="6", class="form-control")
+  div.form-group
+    a.btn.btn-warning#generate Generate
+    script.
+      $('.icon-panel').click(function(){
+        if ($('#book-panel').is(":visible")){
+          $('#book-panel').hide('fade');
+          $('.icon-panel span').removeClass('glyphicon-minus').addClass('glyphicon-plus');
+        }else{
+          $('#book-panel').removeClass('hidden').show('fade');
+          $('.icon-panel span').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        }
       });
-      $('#send').click(function(){
+      $('#generate').click(function(){
         $.ajax({
           method: "POST",
-          url: "request",
+          url: "/scaffold/service",
           dataType: 'json',
-          data: {url: $('#conector').val(), entrada: $('#entrada').val()},
-          beforeSend: function() {
-            $("#div_loading").removeClass('hidden');
-            $("#div_saida").hide();
-            $("#div_loading").show();
-          }          
+          data: {
+            url: $('#conector').val(), 
+            entrada: $('#entrada').val(), 
+            saida: $('#saida').val(),
+            book_entrada: $('#book_entrada').val(), 
+            book_saida: $('#book_saida').val(),
+            'split-info-entrada': $('#split-info-entrada').val(),
+            'split-info-saida': $('#split-info-saida').val(),
+            'split-line-entrada': $('#split-line-entrada').val(),
+            'split-line-saida': $('#split-line-saida').val()
+          }      
         })
         .success(function(res) {
-          $('#saida').val(res.text);
-        })      
-        .done(function( msg ) {
-            $("#div_saida").show();
-            $("#div_loading").hide();
+          $('#service-code').html(res.html);
+          $('#service-code-test').html(res.html_test);
         });      
       });
+    //- end Book#service-code Panel
+
+  div
+    //- <!-- Nav tabs -->
+    ul(class="nav nav-tabs",role="tablist")
+      li(role="presentation",class="active dropdown")
+        a.dropdown-toggle(data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") Service
+          span(class="caret")
+        ul(class="dropdown-menu", role="tablist")
+          li.active(role="presentation")
+            a(href="#service", aria-controls="service", role="tab", data-toggle="tab") code
+          li(role="presentation")
+            a(href="#service_test", aria-controls="service", role="tab", data-toggle="tab") test
+      li(role="presentation")
+        a(href="#processor", aria-controls="processor", role="tab", data-toggle="tab") Processor
+      li(role="presentation")
+        a(href="#resource", aria-controls="resource", role="tab", data-toggle="tab") Controller/resource
+      li(role="presentation")
+        a(href="#validation", aria-controls="validation", role="tab", data-toggle="tab") Controller/validation
+    //- <!-- Tab panes -->
+    div(class="tab-content")
+      div(role="tabpanel", class="tab-pane active", id="service")
+        pre#service-code.
+          service content file here
+      div(role="tabpanel", class="tab-pane", id="service_test")
+        pre#service-code-test.
+          test service content file here
+      div(role="tabpanel", class="tab-pane", id="processor") ...
+      div(role="tabpanel", class="tab-pane", id="resource") ...
+      div(role="tabpanel", class="tab-pane", id="validation") ...

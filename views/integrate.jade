@@ -1,0 +1,53 @@
+block content
+  form
+    div.form-group
+      select(class="form-control", id="conector")
+        each config in configs.connectores
+          option=config.value
+
+    div.form-group
+      label Entrada
+      textarea(id="entrada", rows="6", cols="50", class="form-control")=configs.connectores[0].config_stringify
+
+    div.form-group
+      div.row
+        div.col-md-1
+          a.btn.btn-primary.form-control#send Send
+          
+    div#div_loading.hidden
+      h2 Loading...
+    div#div_saida
+      div.form-group
+        label Saída
+        textarea(id="saida", rows="8", cols="50", class="form-control")
+
+    script(type='text/javascript').
+      $("#conector").change(function(){
+        var elem = $(this);
+        var entrada = $(!{JSON.stringify(configs.connectores)})
+        entrada = entrada.filter(function(index, i){
+          return i.value === elem.val();
+        });
+        if (entrada[0])
+          $('#entrada').val(entrada[0].config_stringify);
+      });
+      $('#send').click(function(){
+        $.ajax({
+          method: "POST",
+          url: "request",
+          dataType: 'json',
+          data: {url: $('#conector').val(), entrada: $('#entrada').val()},
+          beforeSend: function() {
+            $("#div_loading").removeClass('hidden');
+            $("#div_saida").hide();
+            $("#div_loading").show();
+          }          
+        })
+        .success(function(res) {
+          $('#saida').val(res.text);
+        })      
+        .done(function( msg ) {
+            $("#div_saida").show();
+            $("#div_loading").hide();
+        });      
+      });
