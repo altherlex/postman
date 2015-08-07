@@ -1,0 +1,67 @@
+{
+	"connectores":[
+		{
+			"id": "pjtcpims",
+			"url": "http://repositoriofabrica.itau/api_itau/conectores/pjtcpims",
+			"entrada": {"transacao" :"AX2ICHV ", "trancode":"5024502771000088"},
+			"saida_padrao": "0   EXECUCAO OK                   AX2ICHV 000                                                                                          1S005  ",
+			"book_entrada_padrao": null,
+			"book_saida_padrao": null 
+		},
+		{
+			"id": "ws-soap",
+			"url": "http://repositoriofabrica.itau/api_itau/conectores/ws/soap",
+			"entrada": 
+				{
+					"serviceName": "testWsSoap2",
+					"options": {
+						"wsdl": "https://intranet.itau/web1/b3/wsb3infoban/service.asmx?WSDL",
+						"metodo": "ListarInstituicaoFinanceira",
+						"data": {
+					    	"SiglaSistema":"IL",
+					    	"CodigoServico":"",
+				    	    "CodigoCanal":"71",
+				    		"Nome":""
+						}
+					}
+				}
+		},
+		{
+			"id": "ws-rest",
+			"url": "http://repositoriofabrica.itau/api_itau/conectores/ws/soap",
+			"entrada": 
+				{
+					"serviceName": "testWsSoap2",
+					"options": {
+						"wsdl": "https://intranet.itau/web1/b3/wsb3infoban/service.asmx?WSDL",
+						"metodo": "ListarInstituicaoFinanceira",
+						"data": {
+					    	"SiglaSistema":"IL",
+					    	"CodigoServico":"",
+				    	    "CodigoCanal":"71",
+				    		"Nome":""
+						}
+					}
+				}
+		},
+		{
+			"id": "ims",
+			"url": "http://repositoriofabrica.itau/api_sandbox/comunicar/ims",
+			"entrada": {"trancode":"ILAK     M 04 0033S170742001J150005203800000000ILDC"}
+		},
+		{
+			"id": "qt",
+			"url": "http://repositoriofabrica.itau/api_itau/conectores/fconn/qt",
+			"entrada":
+				{
+					"blindagem": "<AREA-SEGC></AREA-SEGC>",
+					"codigoCanal": "71",
+					"idioma": "PT-BR",
+					"modoOperacao": "00",
+					"serviceName": "consultaDadosTitularCC00030X",
+					"servicoQt": "CC00030X",
+					"trancode": "<DADOS-DE-NEGOCIO><NUM-DV>2</NUM-DV><COD-TIPO-ATUA-EMPR>004</COD-TIPO-ATUA-EMPR><COD-BANC>341</COD-BANC><COD-AGEN>1500</COD-AGEN><NUM-CONT-CORE>0005201</NUM-CONT-CORE></DADOS-DE-NEGOCIO>"
+				}
+		}
+	]
+}

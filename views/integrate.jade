@@ -3,7 +3,7 @@ block content
     div.form-group
       select(class="form-control", id="conector")
         each config in configs.connectores
-          option=config.value
+          option(id="#{config.id}")=config.url
 
     div.form-group
       label Entrada
@@ -19,7 +19,7 @@ block content
     div#div_saida
       div.form-group
         label Saída
-        textarea(id="saida", rows="8", cols="50", class="form-control")
+        textarea(id="saida", rows="8", cols="50", class="form-control")=configs.connectores[0].saida_padrao
 
     script(type='text/javascript').
       $("#conector").change(function(){

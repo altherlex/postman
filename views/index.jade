@@ -5,7 +5,7 @@ block content
   //- Book Panel
   div.panel.panel-warning
     div(class="panel-heading")
-      h3(class="panel-title") 2. Book (atributo, valor)
+      h3(class="panel-title") 2. Book (Sequência: campo do serviço, atributo, tamanho, valor)
         button(type="button" class="close icon-panel")
           span.glyphicon.glyphicon-plus
 
@@ -25,23 +25,35 @@ block content
               div.form-inline
                 div.form-group
                   label Split info
-                  input(type="text", class="form-control", id="split-info-entrada", placeholder=",")
+                  input(type="text", class="form-control", id="split-info-entrada", placeholder=",", value=",")
                 div.form-group
                   label Split line
-                  input(type="text", class="form-control", id="split-line-entrada", placeholder=";")
+                  input(type="text", class="form-control", id="split-line-entrada", placeholder=";", value="\\n")
             div.form-group
-              textarea(id="book_entrada", rows="6", class="form-control")
+              textarea(id="book_entrada", rows="6", class="form-control").
+                COD-FUNCAO-WENT,,1,5
+                NUM-CPF-CNPJ-WENT,cpf,15,
           div(role="tabpanel", class="tab-pane", id="book-saida")
             div.form-group
               div.form-inline
                 div.form-group
                   label Split info
-                  input(type="text", class="form-control", id="split-info-saida", placeholder=",")
+                  input(type="text", class="form-control", id="split-info-saida", placeholder=",", value=",")
                 div.form-group
                   label Split line
-                  input(type="text", class="form-control", id="split-line-saida", placeholder=";")
+                  input(type="text", class="form-control", id="split-line-saida", placeholder=";", value="\\n")
             div.form-group
-              textarea(id="book_saida", rows="6", class="form-control")
+              textarea(id="book_saida", rows="6", class="form-control").
+                COD-RETO-WSAI,,1,
+                NUM-LOCL-WSAI,,3,
+                MENS-WSAI,,30,
+                NOM-PROGR-WSAI,,8,
+                SQLCODE-WSAI,,3,
+                NOM-TABE-WSAI,,10,
+                NOM-TABE-WSAITXT-CONS-WSAI,,80,
+                COD-CHAVEAMENTO-WSAI,,1,
+                STA-PUBLIC-PILO-WSAI, status_publico_piloto,1,
+
   div.form-group
     a.btn.btn-warning#generate Generate
     script.
@@ -60,7 +72,9 @@ block content
           url: "/scaffold/service",
           dataType: 'json',
           data: {
-            url: $('#conector').val(), 
+            url: $('#conector').val(),
+            conector: $('#conector').val(), 
+            conector_id: $('#conector').find(":selected").attr('id'), 
             entrada: $('#entrada').val(), 
             saida: $('#saida').val(),
             book_entrada: $('#book_entrada').val(), 
