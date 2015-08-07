@@ -13,11 +13,9 @@ var transacaoBase = {
 };
 
 var transacaoEnvio = {
-  resposta: [
-    <%= book_saida_html%>
-  ],
+  resposta: <%= book_saida_html%>,
   parametros: {
     transacao: "<%= transacao %>"
   }
 };
-module.exports = model.create("<%=service_file%>", service, transacaoBase, transacaoEnvio);
+module.exports = model.create("Service<%=transacao.trim()%>", service, transacaoBase, transacaoEnvio);

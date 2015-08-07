@@ -18,6 +18,7 @@ var _ = require('underscore');
 var moment = require('moment');
 var S = require("underscore.string");
 var stringify_object = require('stringify-object');
+var jju = require('jju')
 
 module.exports = function(params){
     var result = {
@@ -26,7 +27,7 @@ module.exports = function(params){
         conector_service: 'aaaaaa',
         book_entrada: mount_book(params.book_entrada, params['split-info-entrada'], params['split-line-entrada']),
         book_saida: mount_book(params.book_saida, params['split-info-saida'], params['split-line-saida']),
-        transacao: 'aaaaaa',
+        transacao: json_parse(params.entrada).transacao,
         service_file: 'aaaaaa',
         name_service: 'uyyyyyyyyyyyy',
         conector: 'uyyyyyyyyyyyy',
@@ -38,6 +39,9 @@ module.exports = function(params){
     return _.extend(params, result);
 }
 
+function json_parse(entrada){
+    return jju.parse(entrada);
+}
 function mount_book(book, split_info, split_line){
     var map ={
         '\\n': '\n',
@@ -50,7 +54,7 @@ function mount_book(book, split_info, split_line){
     arr_book = arr_book.map(function(item){
         var nome = (!!item[1]) ? item[1] : attr(item[0]);
         var result = { nome: nome, tipo:'texto', tamanho: item[2], fixo: item[3], descricao:item[0] }
-        if (!!result.fixo) delete result.fixo;
+        if (!result.fixo) delete result.fixo;
         return result
     });
     return arr_book;
