@@ -5,7 +5,7 @@ block content
   //- Book Panel
   div.panel.panel-warning
     div(class="panel-heading")
-      h3(class="panel-title") 2. Book (Sequência: campo do serviço, atributo, tamanho, valor)
+      h3(class="panel-title") 2. Book definition (Sequência: campo do serviço, atributo, tamanho, valor)
         button(type="button" class="close icon-panel")
           span.glyphicon.glyphicon-plus
 
@@ -53,18 +53,10 @@ block content
                 NOM-TABE-WSAITXT-CONS-WSAI,,80,
                 COD-CHAVEAMENTO-WSAI,,1,
                 STA-PUBLIC-PILO-WSAI, status_publico_piloto,1,
+  include ./dir-panel.jade
   div.form-group
     a.btn.btn-warning#generate Generate
     script.
-      $('.icon-panel').click(function(){
-        if ($('#book-panel').is(":visible")){
-          $('#book-panel').hide('fade');
-          $('.icon-panel span').removeClass('glyphicon-minus').addClass('glyphicon-plus');
-        }else{
-          $('#book-panel').removeClass('hidden').show('fade');
-          $('.icon-panel span').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        }
-      });
       $('#generate').click(function(){
         $.ajax({
           method: "POST",
