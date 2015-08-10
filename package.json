@@ -17,6 +17,7 @@
     "jju": "^1.2.0",
     "moment": "^2.10.6",
     "morgan": "~1.5.3",
+    "nodemon": "^1.4.0",
     "request": "^2.60.0",
     "serve-favicon": "~2.2.1",
     "stringify-object": "^2.3.0",
