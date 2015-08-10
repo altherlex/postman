@@ -7,12 +7,14 @@ My specific postman
 
 You need pre installed [NodeJs](https://nodejs.org), [NPM](https://www.npmjs.com/) and [Bower](http://bower.io/).
 
-```javascript
+```cmd
     git clone https://github.com/altherlex/postman.git mypostman
     cd mypostman
     bower install
     npm install
-    npm start // access http://localhost:3000
+    npm start
+    // on windows
+    start http://localhost:3000
 ```
 
 ### Tools
